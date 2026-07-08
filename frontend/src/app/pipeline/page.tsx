@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "next";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ReactFlow, { Background, Controls, Edge, Node } from "reactflow";
 import "reactflow/dist/style.css";

@@ -10,6 +10,6 @@ class RecommendationAgent(BaseAgent):
             score=90.0,
             confidence=0.94,
             reason="Applicant shows strong repayment capacity and stable business environment.",
-            suggestions=["Approve Loan Amount: 50,000 USD", "Interest Rate Suggestion: 8.5%"],
+            suggestions=["Approve Loan Amount: ₹ 50,00,000", "Interest Rate Suggestion: 9.5%"],
             agent_name="Recommendation"
         )

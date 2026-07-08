@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "next";
-import { SlidersHorizontal, Play, Save } from "lucide-react";
+import { useState } from "react";
+import { SlidersHorizontal, Play } from "lucide-react";
 
 export default function ScenarioSimulatorPage() {
   const [loading, setLoading] = useState(false);

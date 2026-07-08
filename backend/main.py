@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-app = FastAPI(title="LendingMind AI", description="AI Lending Decision Intelligence Platform")
+app = FastAPI(title="IDBI AI Credit Assessment Platform", description="Indian MSME Lending Decision Intelligence Platform")
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,8 +36,30 @@ def create_company(data: CompanyData):
     return {"status": "success", "company_id": "CMP-12345", "name": data.name}
 
 @app.post("/api/simulate")
-def run_simulation(data: ScenarioInput):
-    # TODO: Connect to decision coordinator
-    from agents.decision_coordinator import run_decision_pipeline
-    result = run_decision_pipeline(data.dict())
+def run_simulation_endpoint(data: ScenarioInput):
+    from services.scenario_simulation import run_simulation
+    # Dummy document list for the simulation
+    base_documents = ["doc1.pdf", "doc2.pdf"]
+    result = run_simulation(base_documents, data.dict())
     return result
+
+class DocumentUpload(BaseModel):
+    documents: list[str]
+
+@app.post("/api/workflow/process-documents")
+def process_documents_endpoint(data: DocumentUpload):
+    from orchestrator.workflow import WorkflowOrchestrator
+    orchestrator = WorkflowOrchestrator()
+    report = orchestrator.run_full_pipeline(data.documents)
+    return {
+        "status": "success",
+        "monitor_status": orchestrator.monitor.get_status().dict(),
+        "report": report.dict()
+    }
+
+@app.get("/api/workflow/status")
+def get_workflow_status():
+    # In a real app, this would query a database or cache for the status of an active pipeline run
+    from orchestrator.monitor import PipelineMonitor
+    dummy_monitor = PipelineMonitor()
+    return dummy_monitor.get_status().dict()
