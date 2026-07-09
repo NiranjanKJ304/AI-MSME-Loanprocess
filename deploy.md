@@ -2,6 +2,9 @@
 
 This guide explains how to deploy the LendingMind AI monorepo on **Render** (FastAPI Backend) and **Vercel** (Next.js Frontend).
 
+> [!NOTE]
+> **Database Requirement**: A database is **not** required to run or deploy this project in its current state. The application runs entirely in-memory using simulated datasets, making it extremely easy to host for demos and hackathons without any database configuration.
+
 ---
 
 ## 1. Deploying the Backend on Render
