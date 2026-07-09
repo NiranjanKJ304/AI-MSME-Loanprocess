@@ -1,0 +1,85 @@
+========================================================================
+                      LENDINGMIND AI - HOW TO USE
+========================================================================
+
+LendingMind AI is an AI Lending Decision Intelligence Platform for MSMEs.
+It analyzes alternative financial data (GST, UPI, Payroll, Banking) 
+across multiple specialized AI Agents to determine loan approvals, 
+recommending structures, and stress-testing financial options.
+
+Follow the instructions below to set up and run the application.
+
+------------------------------------------------------------------------
+1. RUNNING THE BACKEND (FastAPI Server)
+------------------------------------------------------------------------
+The backend handles the multi-agent execution pipeline and simulation.
+
+Step 1: Open a terminal window and navigate to the backend folder:
+   cd backend
+
+Step 2: Activate the Python virtual environment:
+   .\venv\Scripts\Activate.ps1   (Windows PowerShell)
+   venv\Scripts\activate         (Windows Command Prompt)
+   source venv/bin/activate      (macOS/Linux)
+
+Step 3: Install the required dependencies:
+   pip install -r requirements.txt
+
+Step 4: Launch the FastAPI server:
+   uvicorn main:app --reload --port 8000
+
+The API documentation will be available at http://localhost:8000/docs.
+
+------------------------------------------------------------------------
+2. RUNNING THE FRONTEND (Next.js Application)
+------------------------------------------------------------------------
+The frontend serves the user interface with interactive screens.
+
+Step 1: Open a NEW terminal window and navigate to the frontend folder:
+   cd frontend
+
+Step 2: Install dependencies:
+   npm install
+
+Step 3: Start the Next.js development server:
+   npm run dev
+
+Step 4: Open your web browser and navigate to:
+   http://localhost:3000
+
+------------------------------------------------------------------------
+3. STEP-BY-STEP USER JOURNEY WALKTHROUGH
+------------------------------------------------------------------------
+Once both servers are running, walk through the interactive presentation:
+
+1. DASHBOARD:
+   - Observe high-level mock metrics (Processed Applications, Approval Rates).
+   - Click "Create MSME Company" to begin the pipeline.
+
+2. COMPANY PROFILE:
+   - Fill in details like Company Name, Industry, and Annual Revenue.
+   - Check the "Consent to Data Access" box (Alternative Finance consent).
+   - Click "Save & Continue to Data Import".
+
+3. FINANCIAL DATA AGGREGATION:
+   - Click "Start Data Import". You will see mock loaders aggregations for GST records, UPI streams, and Payroll sheets.
+   - Once all show checks, click "Execute AI Pipeline".
+
+4. AI PIPELINE:
+   - You will view a dynamic flowchart (powered by React Flow) representing the different AI Agents processing the data.
+   - Wait for the pipeline animation to complete, then click "View Decision Results".
+
+5. DECISION CENTER:
+   - Look at the radar chart indicating strengths across vectors (Cash Flow, Stability, compliance, etc.).
+   - Read the explicit agent reasoning on the right.
+   - Click "Proceed to Loan Recommendation".
+
+6. LOAN RECOMMENDATION:
+   - View recommended Principal, APR interest rate, and confidence score.
+   - Check the Business Improvement suggestions.
+   - Click "Simulate Scenarios".
+
+7. SCENARIO SIMULATOR:
+   - Adjust variables such as interest rate and growth rate using sliders.
+   - Click "Run Simulation" to immediately stress-test the model and see approval results recalculate in real-time.
+========================================================================

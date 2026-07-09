@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+pandas
+numpy
+scikit-learn
+xgboost
+shap
+prophet
+networkx
+celery
+redis
+sqlalchemy
+psycopg2-binary
