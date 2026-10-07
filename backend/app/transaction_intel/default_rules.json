@@ -1,0 +1,838 @@
+{
+  "version": "in-msme-default-2026.10",
+  "description": "Default transaction classification rules for Indian MSME current-account statements. Replace or extend via TXN_RULES_FILE. Patterns are case-insensitive regular expressions applied to the narration normalised to upper case with separators (/ - : | _ *) turned into spaces.",
+  "thresholds": {
+    "classify_min_score": 0.45,
+    "low_confidence_below": 0.65,
+    "monthly_coverage_ok": 0.8,
+    "own_name_similarity": 0.85
+  },
+  "categories": {
+    "BUSINESS_REVENUE": {
+      "group": "INCOME",
+      "nature": "BUSINESS",
+      "direction": "CREDIT"
+    },
+    "OTHER_BUSINESS_INCOME": {
+      "group": "INCOME",
+      "nature": "BUSINESS",
+      "direction": "CREDIT"
+    },
+    "INTEREST_INCOME": {
+      "group": "INCOME",
+      "nature": "BUSINESS",
+      "direction": "CREDIT"
+    },
+    "SUPPLIER_PAYMENT": {
+      "group": "EXPENSE",
+      "nature": "BUSINESS",
+      "direction": "DEBIT"
+    },
+    "SALARY": {
+      "group": "EXPENSE",
+      "nature": "BUSINESS",
+      "direction": "DEBIT"
+    },
+    "RENT": {
+      "group": "EXPENSE",
+      "nature": "BUSINESS",
+      "direction": "DEBIT"
+    },
+    "UTILITIES": {
+      "group": "EXPENSE",
+      "nature": "BUSINESS",
+      "direction": "DEBIT"
+    },
+    "TAX_PAYMENT": {
+      "group": "EXPENSE",
+      "nature": "BUSINESS",
+      "direction": "DEBIT"
+    },
+    "BANK_CHARGES": {
+      "group": "EXPENSE",
+      "nature": "BUSINESS",
+      "direction": "DEBIT"
+    },
+    "INSURANCE": {
+      "group": "EXPENSE",
+      "nature": "UNKNOWN",
+      "direction": "DEBIT"
+    },
+    "OPERATING_EXPENSE": {
+      "group": "EXPENSE",
+      "nature": "BUSINESS",
+      "direction": "DEBIT"
+    },
+    "LOAN_DISBURSEMENT": {
+      "group": "FINANCING",
+      "nature": "FINANCING",
+      "direction": "CREDIT"
+    },
+    "LOAN_REPAYMENT": {
+      "group": "FINANCING",
+      "nature": "FINANCING",
+      "direction": "DEBIT"
+    },
+    "INTEREST_PAYMENT": {
+      "group": "FINANCING",
+      "nature": "FINANCING",
+      "direction": "DEBIT"
+    },
+    "OWN_ACCOUNT_TRANSFER": {
+      "group": "TRANSFER",
+      "nature": "TRANSFER",
+      "direction": "ANY"
+    },
+    "INTERNAL_TRANSFER": {
+      "group": "TRANSFER",
+      "nature": "TRANSFER",
+      "direction": "ANY"
+    },
+    "RELATED_ACCOUNT_TRANSFER": {
+      "group": "TRANSFER",
+      "nature": "TRANSFER",
+      "direction": "ANY"
+    },
+    "CASH_DEPOSIT": {
+      "group": "CASH",
+      "nature": "UNKNOWN",
+      "direction": "CREDIT"
+    },
+    "CASH_WITHDRAWAL": {
+      "group": "CASH",
+      "nature": "UNKNOWN",
+      "direction": "DEBIT"
+    },
+    "INVESTMENT": {
+      "group": "OTHER",
+      "nature": "UNKNOWN",
+      "direction": "ANY"
+    },
+    "REFUND": {
+      "group": "OTHER",
+      "nature": "UNKNOWN",
+      "direction": "CREDIT"
+    },
+    "REVERSAL": {
+      "group": "OTHER",
+      "nature": "UNKNOWN",
+      "direction": "ANY"
+    },
+    "UNKNOWN": {
+      "group": "OTHER",
+      "nature": "UNKNOWN",
+      "direction": "ANY"
+    }
+  },
+  "rules": [
+    {
+      "id": "revenue_keywords",
+      "category": "BUSINESS_REVENUE",
+      "direction": "CREDIT",
+      "weight": 0.6,
+      "patterns": [
+        "\\b(?:INV|INVOICE|BILL NO|SALES?|SALE PROCEEDS|PAYMENT RECEIVED|PYMT RECD|PMT RECD|COLLECTION|CUSTOMER|ORDER)\\b"
+      ],
+      "exclude": [
+        "\\bCASHBACK\\b",
+        "\\bREFUND\\w*",
+        "\\bRETURN(?:ED)?\\b",
+        "\\bREV(?:ERSAL|ERSED|L)?\\b",
+        "\\bRFND\\b",
+        "\\bRTN\\b"
+      ]
+    },
+    {
+      "id": "revenue_settlement",
+      "category": "BUSINESS_REVENUE",
+      "direction": "CREDIT",
+      "weight": 0.6,
+      "patterns": [
+        "\\b(?:RAZORPAY|PAYU|CCAVENUE|CASHFREE|PAYTM SETTL\\w*|PG SETTL\\w*|POS SETTL\\w*|MERCHANT SETTL\\w*|SWIGGY PAYOUT|ZOMATO PAYOUT|AMAZON SELLER|FLIPKART SELLER)\\b"
+      ],
+      "exclude": [
+        "\\bLOAN\\b",
+        "\\bREFUND\\b"
+      ],
+      "keyword_is_counterparty": true
+    },
+    {
+      "id": "other_income",
+      "category": "OTHER_BUSINESS_INCOME",
+      "direction": "CREDIT",
+      "weight": 0.65,
+      "patterns": [
+        "\\b(?:COMMISSION RECEIVED|INCENTIVE|SUBSIDY|GRANT|DIVIDEND|RENT RECEIVED|SCRAP SALE|INSURANCE CLAIM|CLAIM SETTL\\w*|DUTY DRAWBACK)\\b"
+      ],
+      "exclude": [
+        "\\bCASHBACK\\b",
+        "\\bREFUND\\w*",
+        "\\bRETURN(?:ED)?\\b",
+        "\\bREV(?:ERSAL|ERSED|L)?\\b",
+        "\\bRFND\\b",
+        "\\bRTN\\b"
+      ]
+    },
+    {
+      "id": "interest_income",
+      "category": "INTEREST_INCOME",
+      "direction": "CREDIT",
+      "weight": 0.85,
+      "patterns": [
+        "\\bINT(?:EREST)?\\.? ?(?:PD|PAID|CR|CREDIT|CREDITED)\\b",
+        "\\bINTEREST ON (?:SB|FD|DEPOSIT|SWEEP)\\b",
+        "\\b(?:SB|FD|RD) INT(?:EREST)?\\b",
+        "\\bCREDIT INTEREST\\b"
+      ]
+    },
+    {
+      "id": "supplier_keywords",
+      "category": "SUPPLIER_PAYMENT",
+      "direction": "DEBIT",
+      "weight": 0.6,
+      "patterns": [
+        "\\b(?:PURCHASE|SUPPLIER|VENDOR|MATERIAL|RAW MAT\\w*|INV|INVOICE|BILL NO|PO NO|ADVANCE TO)\\b"
+      ],
+      "exclude": [
+        "\\bCASHBACK\\b",
+        "\\bREFUND\\w*",
+        "\\bRETURN(?:ED)?\\b",
+        "\\bREV(?:ERSAL|ERSED|L)?\\b",
+        "\\bRFND\\b",
+        "\\bRTN\\b"
+      ]
+    },
+    {
+      "id": "salary",
+      "category": "SALARY",
+      "direction": "DEBIT",
+      "weight": 0.85,
+      "patterns": [
+        "\\b(?:SALARY|SALARIES|SAL|WAGES?|PAYROLL|STIPEND|BONUS)\\b"
+      ]
+    },
+    {
+      "id": "rent",
+      "category": "RENT",
+      "direction": "DEBIT",
+      "weight": 0.85,
+      "patterns": [
+        "\\b(?:RENT|RENTAL|LEASE RENT|LICENSE FEE|LEAVE AND LICENSE)\\b"
+      ],
+      "exclude": [
+        "\\bRENT RECEIVED\\b",
+        "\\bRENTAL INCOME\\b"
+      ]
+    },
+    {
+      "id": "utilities",
+      "category": "UTILITIES",
+      "direction": "DEBIT",
+      "weight": 0.85,
+      "patterns": [
+        "\\b(?:ELECTRICITY BILL|EB BILL|POWER BILL|WATER (?:BILL|TAX|CHARGES)|GAS BILL|PIPED GAS|BROADBAND|TELEPHONE|MOBILE BILL|POSTPAID|INTERNET BILL|ELECTRICITY)\\b"
+      ]
+    },
+    {
+      "id": "utility_providers",
+      "category": "UTILITIES",
+      "direction": "DEBIT",
+      "weight": 0.85,
+      "keyword_is_counterparty": true,
+      "patterns": [
+        "\\b(?:ELECTRICITY BOARD|ELEC BOARD|WATER BOARD|TNEB|TANGEDCO|BESCOM|MSEDCL|BSES|CESC|TATA POWER|ADANI ELEC\\w*|TORRENT POWER|AIRTEL|JIO|VODAFONE|VI POSTPAID|BSNL|MAHANAGAR GAS|INDRAPRASTHA GAS)\\b"
+      ]
+    },
+    {
+      "id": "tax",
+      "category": "TAX_PAYMENT",
+      "direction": "DEBIT",
+      "weight": 0.85,
+      "patterns": [
+        "\\b(?:GST (?:PMT|PAYMENT|CHALLAN|TAX)|GSTN|CPIN|CBDT|INCOME TAX|ADVANCE TAX|SELF ASSESSMENT TAX|TDS|TAX PAYMENT|ITNS ?\\d*|PROFESSIONAL TAX|PROPERTY TAX|ESIC|EPFO?|PROVIDENT FUND|CUSTOMS DUTY)\\b"
+      ]
+    },
+    {
+      "id": "bank_charges",
+      "category": "BANK_CHARGES",
+      "direction": "DEBIT",
+      "weight": 0.85,
+      "max_amount": 50000,
+      "patterns": [
+        "\\b(?:CHARGES?|CHRGS?|CHGS?|COMMISSION|COMM|SMS (?:ALERT|CHG\\w*)|MIN(?:IMUM)? BAL\\w*|NON MAINT\\w*|PENAL(?:TY)?|SERVICE (?:CHARGE|FEE)|PROCESSING FEE|FEE|GST ON CHG\\w*|DEBIT CARD (?:FEE|AMC|ANNUAL)|AMC|FOLIO CHG|CHQ BOOK|STAMP DUTY|IMPS CHG|NEFT CHG|RTGS CHG|ECS RTN CHG)\\b"
+      ],
+      "exclude": [
+        "\\bCOMMISSION RECEIVED\\b",
+        "\\bSCHOOL FEE"
+      ]
+    },
+    {
+      "id": "insurance",
+      "category": "INSURANCE",
+      "direction": "DEBIT",
+      "weight": 0.8,
+      "patterns": [
+        "\\b(?:INSURANCE|PREMIUM|POLICY NO|POLICY|LIFE INS\\w*|GEN(?:ERAL)? INS\\w*)\\b"
+      ]
+    },
+    {
+      "id": "insurers",
+      "category": "INSURANCE",
+      "direction": "DEBIT",
+      "weight": 0.8,
+      "keyword_is_counterparty": true,
+      "patterns": [
+        "\\b(?:LIC|HDFC ERGO|ICICI LOMBARD|BAJAJ ALLIANZ|NEW INDIA ASSURANCE|STAR HEALTH|TATA AIG|SBI LIFE|HDFC LIFE|ICICI PRU\\w*|MAX LIFE|UNITED INDIA INS\\w*|ORIENTAL INS\\w*)\\b"
+      ]
+    },
+    {
+      "id": "operating",
+      "category": "OPERATING_EXPENSE",
+      "direction": "DEBIT",
+      "weight": 0.7,
+      "patterns": [
+        "\\b(?:FREIGHT|TRANSPORT\\w*|LOGISTICS|COURIER|REPAIRS?|MAINTENANCE|FUEL|DIESEL|PETROL|STATIONERY|PRINTING|ADVERTIS\\w*|MARKETING|PROFESSIONAL FEES?|AUDIT FEES?|CONSULTANCY|LEGAL FEES?|SOFTWARE|SUBSCRIPTION|TRAVEL|HIRE CHARGES|LABOUR|JOB WORK)\\b"
+      ]
+    },
+    {
+      "id": "loan_disbursement",
+      "category": "LOAN_DISBURSEMENT",
+      "direction": "CREDIT",
+      "weight": 0.9,
+      "patterns": [
+        "\\bLOAN ?DISB\\w*",
+        "\\bDISBURSE?(?:MENT|D)?\\b",
+        "\\bDISB\\b",
+        "\\bTERM LOAN (?:CR|CREDIT)\\b",
+        "\\bLOAN (?:A C |AC |ACCOUNT )?(?:CR|CREDIT)\\b",
+        "\\b(?:OD|CC) LIMIT\\b",
+        "\\bBUSINESS LOAN\\b"
+      ],
+      "exclude": [
+        "\\bEMI\\b",
+        "\\bREPAY\\w*"
+      ]
+    },
+    {
+      "id": "emi",
+      "category": "LOAN_REPAYMENT",
+      "direction": "DEBIT",
+      "weight": 0.85,
+      "patterns": [
+        "\\bEMI\\b",
+        "\\bLOAN (?:REPAY\\w*|INST\\w*|RECOVERY)\\b",
+        "\\bINSTAL+MENT\\b",
+        "\\bLN ?(?:REPAY\\w*|INST\\w*)\\b",
+        "\\bTL (?:REPAY\\w*|INST\\w*)\\b",
+        "\\bNACH\\b.*\\b(?:FIN\\w*|LOAN|CAPITAL|CREDIT)\\b",
+        "\\bACH DR\\b.*\\b(?:LOAN|FIN\\w*)\\b"
+      ]
+    },
+    {
+      "id": "interest_payment",
+      "category": "INTEREST_PAYMENT",
+      "direction": "DEBIT",
+      "weight": 0.85,
+      "patterns": [
+        "\\b(?:OD|CC|LOAN|TL) INT(?:EREST)?\\b",
+        "\\bINT(?:EREST)? (?:ON )?(?:OD|CC|LOAN|DEBIT|DR|CHARGED|APPLIED)\\b",
+        "\\bINTEREST DEBIT\\b",
+        "\\bDR INT\\b"
+      ]
+    },
+    {
+      "id": "own_account",
+      "category": "OWN_ACCOUNT_TRANSFER",
+      "direction": "ANY",
+      "weight": 0.85,
+      "patterns": [
+        "\\bOWN (?:A C|AC|ACCOUNT|ACCT)\\b",
+        "\\bSELF (?:TRF|TRANSFER|A C|AC)\\b",
+        "\\b(?:TO|FROM) SELF\\b",
+        "\\b(?:AUTO )?SWEEP\\b",
+        "\\b(?:FD|FIXED DEPOSIT|RD) (?:BOOKING|CREATION|CLOSURE|PREMAT\\w*|MATURITY|A C|AC)\\b",
+        "\\bTRF (?:TO|FROM) (?:FD|RD)\\b"
+      ]
+    },
+    {
+      "id": "internal_transfer_words",
+      "category": "INTERNAL_TRANSFER",
+      "direction": "ANY",
+      "weight": 0.35,
+      "patterns": [
+        "\\b(?:IFT|INTRA ?BANK|FUNDS? TRANSFER|INTERNAL TRANSFER|A C TRANSFER|TRANSFER (?:TO|FROM) A C)\\b"
+      ]
+    },
+    {
+      "id": "cash_deposit",
+      "category": "CASH_DEPOSIT",
+      "direction": "CREDIT",
+      "weight": 0.9,
+      "patterns": [
+        "\\b(?:CASH ?DEP\\w*|CSH ?DEP|BY CASH|CDM|CASH CR|CASH DEPOSIT)\\b"
+      ]
+    },
+    {
+      "id": "cash_withdrawal",
+      "category": "CASH_WITHDRAWAL",
+      "direction": "DEBIT",
+      "weight": 0.9,
+      "patterns": [
+        "\\b(?:ATM|ATW|CASH ?W(?:D|DL|ITHDRAWAL)|CSH ?WDL|NFS CASH|SELF CHQ|CHQ PAID SELF|CASH PAID)\\b"
+      ]
+    },
+    {
+      "id": "investment",
+      "category": "INVESTMENT",
+      "direction": "ANY",
+      "weight": 0.8,
+      "patterns": [
+        "\\b(?:MUTUAL FUND|MF (?:PURCHASE|SIP|REDEMPTION)|SIP|DEMAT|SHARES? PURCHASE|NPS)\\b"
+      ]
+    },
+    {
+      "id": "investment_platforms",
+      "category": "INVESTMENT",
+      "direction": "ANY",
+      "weight": 0.8,
+      "keyword_is_counterparty": true,
+      "patterns": [
+        "\\b(?:ZERODHA|GROWW|NSDL|CDSL|BSE STAR|UPSTOX|KFINTECH|CAMS)\\b"
+      ]
+    },
+    {
+      "id": "refund",
+      "category": "REFUND",
+      "direction": "CREDIT",
+      "weight": 0.85,
+      "patterns": [
+        "\\bREFUND\\w*\\b",
+        "\\bRFND\\b",
+        "\\bCASHBACK\\b"
+      ]
+    },
+    {
+      "id": "reversal",
+      "category": "REVERSAL",
+      "direction": "ANY",
+      "weight": 0.75,
+      "patterns": [
+        "\\bREV(?:ERSAL|ERSED|L)?\\b",
+        "\\bRETURN(?:ED)?\\b",
+        "\\bRTN\\b",
+        "\\bRET\\b",
+        "\\bBOUNCE[D]?\\b",
+        "\\bFAILED\\b",
+        "\\bUNPAID\\b",
+        "\\bDISHONOU?R\\w*",
+        "\\bCANCEL+(?:ED|ATION)?\\b"
+      ],
+      "exclude": [
+        "\\bGST ?R? ?\\d? RETURN\\b",
+        "\\bITR\\b",
+        "\\bTAX RETURN\\b"
+      ]
+    }
+  ],
+  "signals": {
+    "business_counterparty_credit": {
+      "category": "BUSINESS_REVENUE",
+      "weight": 0.55,
+      "channels": [
+        "NEFT",
+        "RTGS",
+        "IMPS",
+        "CHEQUE",
+        "UPI"
+      ],
+      "counterparty_types": [
+        "BUSINESS_ENTITY"
+      ]
+    },
+    "business_counterparty_debit": {
+      "category": "SUPPLIER_PAYMENT",
+      "weight": 0.5,
+      "channels": [
+        "NEFT",
+        "RTGS",
+        "IMPS",
+        "CHEQUE"
+      ],
+      "counterparty_types": [
+        "BUSINESS_ENTITY"
+      ]
+    },
+    "lender_credit": {
+      "category": "LOAN_DISBURSEMENT",
+      "weight": 0.35,
+      "counterparty_types": [
+        "BANK_OR_LENDER"
+      ],
+      "min_amount": 100000
+    },
+    "lender_debit": {
+      "category": "LOAN_REPAYMENT",
+      "weight": 0.3,
+      "counterparty_types": [
+        "BANK_OR_LENDER"
+      ]
+    },
+    "government_debit": {
+      "category": "TAX_PAYMENT",
+      "weight": 0.4,
+      "counterparty_types": [
+        "GOVERNMENT"
+      ]
+    },
+    "own_entity_counterparty": {
+      "category": "OWN_ACCOUNT_TRANSFER",
+      "weight": 0.85
+    },
+    "related_party_counterparty": {
+      "category": "RELATED_ACCOUNT_TRANSFER",
+      "weight": 0.75
+    },
+    "other_account_number_mentioned": {
+      "category": "INTERNAL_TRANSFER",
+      "weight": 0.6
+    },
+    "matching_opposite_entry_other_account": {
+      "category": "INTERNAL_TRANSFER",
+      "weight": 0.75,
+      "max_days": 2
+    },
+    "recurring_payer": {
+      "category": "BUSINESS_REVENUE",
+      "weight": 0.3
+    },
+    "recurring_payee": {
+      "category": "SUPPLIER_PAYMENT",
+      "weight": 0.2
+    },
+    "recurring_confirms_top": {
+      "weight": 0.15
+    }
+  },
+  "personal": {
+    "weight": 0.6,
+    "patterns": [
+      "\\b(?:CREDIT CARD|CC PAYMENT|CARD (?:PAYMENT|BILL)|SCHOOL FEES?|COLLEGE FEES?|TUITION|SWIGGY|ZOMATO|NETFLIX|HOTSTAR|SPOTIFY|HOSPITAL|PHARMACY|MEDICAL|MYNTRA|NYKAA|PERSONAL|HOUSEHOLD|GROCERY)\\b"
+    ],
+    "exclude": [
+      "\\bSWIGGY PAYOUT\\b",
+      "\\bZOMATO PAYOUT\\b"
+    ]
+  },
+  "channels": {
+    "NEFT": [
+      "NEFT"
+    ],
+    "RTGS": [
+      "RTGS"
+    ],
+    "IMPS": [
+      "IMPS",
+      "MMT",
+      "P2A",
+      "P2P"
+    ],
+    "UPI": [
+      "UPI",
+      "UPIAR",
+      "UPIAB"
+    ],
+    "ACH": [
+      "ACH",
+      "NACH",
+      "ECS",
+      "SI"
+    ],
+    "CHEQUE": [
+      "CHQ",
+      "CHEQUE",
+      "CLG",
+      "CLEARING",
+      "CTS",
+      "INWARD",
+      "OUTWARD"
+    ],
+    "ATM": [
+      "ATM",
+      "ATW",
+      "NFS"
+    ],
+    "POS": [
+      "POS",
+      "PCD",
+      "ECOM"
+    ],
+    "CASH": [
+      "CASH",
+      "CSH",
+      "CDM"
+    ],
+    "INTERNAL": [
+      "TRF",
+      "TRANSFER",
+      "FT",
+      "IFT",
+      "INB",
+      "IB",
+      "SWEEP",
+      "TPT",
+      "BIL",
+      "BILLPAY",
+      "MB",
+      "NETBANK"
+    ]
+  },
+  "counterparty": {
+    "stopwords": [
+      "CR",
+      "DR",
+      "CREDIT",
+      "DEBIT",
+      "TO",
+      "FROM",
+      "BY",
+      "FOR",
+      "VIA",
+      "OF",
+      "AT",
+      "IN",
+      "THE",
+      "A",
+      "C",
+      "AC",
+      "ACCT",
+      "ACCOUNT",
+      "NO",
+      "REF",
+      "UTR",
+      "TXN",
+      "TRAN",
+      "TRANS",
+      "PAYMENT",
+      "PMT",
+      "PAY",
+      "PAID",
+      "RECD",
+      "RECEIVED",
+      "BATCH",
+      "INB",
+      "IB",
+      "MB",
+      "MOB",
+      "NETBANK",
+      "NET",
+      "BANKING",
+      "ONLINE",
+      "FUND",
+      "FUNDS",
+      "EMI",
+      "LOAN",
+      "INST",
+      "CHARGES",
+      "CHARGE",
+      "CHG",
+      "CHGS",
+      "SMS",
+      "ALERT",
+      "SALARY",
+      "SAL",
+      "RENT",
+      "DEPOSIT",
+      "DEP",
+      "WDL",
+      "WITHDRAWAL",
+      "INTEREST",
+      "INT",
+      "REFUND",
+      "REVERSAL",
+      "REV",
+      "RETURN",
+      "INV",
+      "INVOICE",
+      "BILL",
+      "PART",
+      "SETTLEMENT",
+      "AGAINST",
+      "TOWARDS",
+      "OTHERS",
+      "OTHER",
+      "MISC"
+    ],
+    "month_tokens": [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "SEPT",
+      "OCT",
+      "NOV",
+      "DEC",
+      "JANUARY",
+      "FEBRUARY",
+      "MARCH",
+      "APRIL",
+      "JUNE",
+      "JULY",
+      "AUGUST",
+      "SEPTEMBER",
+      "OCTOBER",
+      "NOVEMBER",
+      "DECEMBER",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "business_suffixes": [
+      "LTD",
+      "LIMITED",
+      "PVT",
+      "PRIVATE",
+      "LLP",
+      "INC",
+      "CORP",
+      "CORPORATION",
+      "CO",
+      "COMPANY",
+      "ENTERPRISES",
+      "ENTERPRISE",
+      "TRADERS",
+      "TRADING",
+      "INDUSTRIES",
+      "INDUSTRY",
+      "EXPORTS",
+      "IMPORTS",
+      "AGENCIES",
+      "AGENCY",
+      "SOLUTIONS",
+      "SERVICES",
+      "TECHNOLOGIES",
+      "TECH",
+      "MOTORS",
+      "METALS",
+      "STEELS",
+      "STEEL",
+      "PUMPS",
+      "TEXTILES",
+      "FOODS",
+      "PHARMA",
+      "CONSTRUCTIONS",
+      "CONSTRUCTION",
+      "ASSOCIATES",
+      "SONS",
+      "BROTHERS",
+      "BROS",
+      "GROUP",
+      "MILLS",
+      "WORKS",
+      "STORES",
+      "MART",
+      "EQUIPMENTS",
+      "EQUIPMENT",
+      "AUTO",
+      "PARTS",
+      "ENGINEERING",
+      "LOGISTICS",
+      "PLASTICS",
+      "CHEMICALS",
+      "ELECTRICALS",
+      "ELECTRONICS",
+      "SYSTEMS",
+      "INFRA",
+      "DISTRIBUTORS",
+      "SUPPLIERS",
+      "IND",
+      "INDS",
+      "ENT",
+      "ENTP",
+      "TRDG",
+      "MFG",
+      "MFRS",
+      "INTL",
+      "PVTLTD"
+    ],
+    "lender_words": [
+      "BANK",
+      "FINANCE",
+      "FINSERV",
+      "FINANCIAL",
+      "CAPITAL",
+      "CREDIT",
+      "NBFC",
+      "HOUSING",
+      "LENDING",
+      "HDFC",
+      "ICICI",
+      "SBI",
+      "AXIS",
+      "KOTAK",
+      "BAJAJ",
+      "TATA CAPITAL",
+      "MUTHOOT",
+      "MANAPPURAM"
+    ],
+    "government_words": [
+      "CBDT",
+      "GSTN",
+      "GOVT",
+      "GOVERNMENT",
+      "MUNICIPAL",
+      "CORPORATION OF",
+      "EPFO",
+      "ESIC",
+      "TNEB",
+      "TANGEDCO",
+      "ELECTRICITY BOARD",
+      "WATER BOARD",
+      "RTO",
+      "TREASURY",
+      "COMMISSIONER"
+    ]
+  },
+  "reversal": {
+    "window_days": 10,
+    "refund_patterns": [
+      "\\bREFUND\\w*\\b",
+      "\\bRFND\\b"
+    ]
+  },
+  "recurring": {
+    "min_occurrences": 3,
+    "min_distinct_months": 2,
+    "intervals": {
+      "WEEKLY": [
+        5,
+        9
+      ],
+      "MONTHLY": [
+        25,
+        35
+      ],
+      "QUARTERLY": [
+        80,
+        100
+      ]
+    },
+    "regular_share": 0.6,
+    "stable_amount_cv": 0.15,
+    "group_by_category_without_counterparty": [
+      "SALARY",
+      "RENT",
+      "LOAN_REPAYMENT",
+      "INTEREST_PAYMENT",
+      "UTILITIES",
+      "INSURANCE",
+      "BANK_CHARGES"
+    ]
+  },
+  "related_party_names": []
+}

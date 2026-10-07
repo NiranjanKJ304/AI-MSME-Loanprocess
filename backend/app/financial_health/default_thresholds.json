@@ -1,0 +1,37 @@
+{
+  "version": "health-thresholds-2026.10-default",
+  "note": "Prototype thresholds for DESCRIPTIVE indicators only (STRONG / STABLE / DECLINING / WEAK). They describe financial condition; they are not a risk score, a repayment-capacity measure or a credit decision. Agree values with the credit team before use.",
+  "calculation": {
+    "min_months_for_consistency": 3,
+    "min_years_for_consistency": 3,
+    "min_classification_coverage": 0.7,
+    "unidentified_counterparty_share_low_confidence": 0.5
+  },
+  "revenue": {
+    "declining_growth_at_most": -0.05,
+    "strong_growth_at_least": 0.25
+  },
+  "profitability": {
+    "weak_net_margin_below": 0.0,
+    "strong_net_margin_at_least": 0.10,
+    "declining_margin_drop_at_least": 0.02
+  },
+  "liquidity": {
+    "weak_current_ratio_below": 1.0,
+    "strong_current_ratio_at_least": 1.5
+  },
+  "cash_flow": {
+    "weak_cash_flow_margin_below": 0.0,
+    "strong_cash_flow_margin_at_least": 0.15,
+    "strong_positive_month_share_at_least": 0.75
+  },
+  "leverage": {
+    "strong_debt_to_revenue_at_most": 0.25,
+    "weak_debt_to_revenue_above": 1.0
+  },
+  "stability": {
+    "weak_consistency_below": 0.4,
+    "strong_consistency_at_least": 0.7,
+    "high_concentration_at_least": 0.5
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "version": "forecast-config-2026.10-default",
+  "note": "Prototype settings for deterministic statistical forecasts (naive / moving average / linear trend / seasonal naive). Forecasts are projections, not actuals, and are not a repayment-capacity or credit assessment.",
+  "outlier_robust_z": 3.5,
+  "interval_level": 0.8,
+  "interval_z": 1.2816,
+  "annual": {
+    "min_observations": 2,
+    "low_confidence_below": 5,
+    "moving_average_window": 2,
+    "linear_trend_min_train": 2,
+    "min_backtest_points": 1,
+    "interval_min_backtest_points": 3,
+    "horizon": 1
+  },
+  "monthly": {
+    "min_observations": 6,
+    "low_confidence_below": 12,
+    "moving_average_window": 3,
+    "linear_trend_min_train": 6,
+    "min_backtest_points": 3,
+    "interval_min_backtest_points": 6,
+    "horizon": 3,
+    "seasonality_min_months": 24,
+    "seasonality_strength_threshold": 0.6,
+    "min_classification_coverage": 0.75,
+    "max_unknown_share": 0.25
+  }
+}

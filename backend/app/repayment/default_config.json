@@ -1,0 +1,13 @@
+{
+  "version": "repayment-config-2026.10-default",
+  "note": "Prototype settings for a DESCRIPTIVE repayment-capacity analysis. The outcome labels describe data adequacy and cash-flow capacity; they are not a risk grade, an approval or a rejection. Agree values with the credit team before use.",
+  "history_months": 12,
+  "min_history_months": 6,
+  "min_classification_coverage": 0.75,
+  "max_unknown_share": 0.25,
+  "low_capacity_dscr_below": 1.25,
+  "stress": {
+    "revenue_down_pct": 0.20,
+    "expense_up_pct": 0.10
+  }
+}
